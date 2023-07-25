@@ -1,3 +1,5 @@
+import java.util.*;
+
 class Outer {
     void show() {
         System.out.println("Inside Outer");
@@ -238,8 +240,69 @@ interface Ab {
     }
 } // Static method in interface Demonstration
 
+class MyException extends Exception {
+    public MyException(String message) {
+        super(message);
+    }
+} // User Defined Exception
+
+class Hi extends Thread {
+    public void run() {
+        for (int i = 1; i <= 5; i++) {
+            System.out.println("Hi");
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+}
+
+class Hello extends Thread {
+    public void run() {
+        for (int i = 1; i <= 5; i++) {
+            System.out.println("Hello");
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+} // Multi-Threading Demonstration
+
+class Increment {
+    int count;
+
+    public synchronized void increase() {
+        count++;
+    }
+} // Synchronization Demonstration
+
+class Studs implements Comparable<Studs> {
+    int rollno;
+    String name;
+    int marks;
+
+    public Studs(int rollno, String name, int marks) {
+        this.rollno = rollno;
+        this.name = name;
+        this.marks = marks;
+    }
+
+    @Override
+    public String toString() {
+        return "Studs{" + "rollno=" + rollno + ", name='" + name + '\'' + ", marks=" + marks + '}';
+    }
+
+    public int compareTo(Studs s) {
+        return marks > s.marks ? 1 : -1;
+    }
+} // Comparable interface Demonstration
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         System.out.println("Hello World");
         int a = 10_000_0, b = 9;
         System.out.println(a + b);
@@ -369,5 +432,241 @@ public class Main {
         bobj.show();
 
         Ab.show();
+
+        // Exception Handling
+        try {
+            int i = 7, j = 2;
+            System.out.println("Answer is " + (i / j));
+        } catch (Exception e) {
+            System.out.println("Error");
+        } finally {
+            System.out.println("Process Ends");
+        }
+
+        // User defined Exception Handling
+        int i = 7, j = 2;
+        try {
+            if (j == 2) throw new MyException("J's value is 2");
+            System.out.println("Everything is fine!");
+        } catch (MyException e) {
+            System.out.println("Error : " + e.getMessage());
+        } finally {
+            System.out.println("Final");
+        }
+
+        // Scanner class to take input
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        System.out.println("N is : " + n);
+        sc.close();
+
+
+        // Multi Threading using Thread Class
+        Hi hiobj = new Hi();
+        Hello helloobj = new Hello();
+
+        hiobj.start();
+        try {
+            Thread.sleep(10);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        helloobj.start();
+
+
+        // Multi Threading using Runnable Interface
+        Thread t1 = new Thread(() -> {
+            for (int k = 1; k <= 5; k++) {
+                System.out.println("Hey Man");
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
+
+        Thread t2 = new Thread(() -> {
+            for (int k = 1; k <= 5; k++) {
+                System.out.println("Hey You");
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
+
+        // Setting name and priority of Threads and also getting them
+        System.out.println();
+        System.out.println(t1.getName());
+        System.out.println(t2.getName());
+        System.out.println(t1.getPriority());
+        System.out.println(t2.getPriority());
+        System.out.println();
+
+        t1.setName("Chiphali Thread");
+        t2.setName("Shoebhum Thread");
+        t1.setPriority(Thread.MIN_PRIORITY);
+        t2.setPriority(Thread.MAX_PRIORITY);
+
+        System.out.println();
+        System.out.println(t1.getName());
+        System.out.println(t2.getName());
+        System.out.println(t1.getPriority());
+        System.out.println(t2.getPriority());
+        System.out.println();
+
+        t1.start();
+        try {
+            Thread.sleep(10);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        t2.start();
+
+        System.out.println(t1.isAlive()); // Check if thread is still alive
+
+        t1.join();
+        t2.join(); // Let the threads join and then main thread will execute
+        System.out.println(t1.isAlive());
+        System.out.println("Main Thread");
+
+
+        // Use of Synchronized keyword to make methods Thread-safe
+        Increment inc = new Increment();
+        Thread t3 = new Thread(() -> {
+            for (int k = 1; k <= 1000; k++) {
+                inc.increase();
+            }
+        });
+
+        Thread t4 = new Thread(() -> {
+            for (int k = 1; k <= 1000; k++) {
+                inc.increase();
+            }
+        });
+
+        t3.start();
+        t4.start();
+
+        t3.join();
+        t4.join();
+        System.out.println("Count : " + inc.count);
+
+
+        // Use of Collection API
+        System.out.println();
+        Collection values = new ArrayList<>();
+        values.add(2);
+        values.add(7);
+        values.add(10);
+
+        Iterator it = values.iterator();
+        while (it.hasNext()) {
+            System.out.print(it.next() + " ");
+        }
+
+        System.out.println();
+        for (Object value : values) {
+            System.out.print(value + " ");
+        }
+        System.out.println();
+
+
+        List<Integer> value = new ArrayList<>();
+        value.add(2);
+        value.add(7);
+        value.add(10);
+        for (int k = 0; k < value.size(); k++) {
+            System.out.print(value.get(k) + " ");
+        }
+        System.out.println();
+        value.add(1, 8);
+        for (Integer v : value) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
+        Collections.sort(value);
+        for (Integer v : value) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
+        Collections.reverse(value);
+        for (Integer v : value) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
+        Collections.shuffle(value);
+        for (Integer v : value) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
+
+        Comparator<Integer> c = new Comparator<>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return (o1 % 10 > o2 % 10 ? 1 : -1);
+            }
+        };
+        Collections.sort(value, c);
+        Collections.sort(value, (o1, o2) -> (o1 % 10 > o2 % 10 ? 1 : -1));
+        for (Integer v : value) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
+
+        List<Studs> st = new ArrayList<>();
+        st.add(new Studs(1, "Archi", 100));
+        st.add(new Studs(2, "Rivu", 12));
+        st.add(new Studs(3, "Semicolonised", 82));
+        Collections.sort(st);
+
+        for (Studs s : st) {
+            System.out.println(s.toString());
+        }
+
+
+        // UnOrdered Set or HashSet
+        Set<Integer> set = new HashSet<>();
+        set.add(8);
+        set.add(5);
+        set.add(13);
+        for (int val : set) {
+            System.out.println("Value = " + val);
+        }
+        System.out.println();
+
+        // Ordered Set or TreeSet
+        Set<Integer> set1 = new TreeSet<>();
+        set1.add(8);
+        set1.add(5);
+        set1.add(13);
+        for (int val : set1) {
+            System.out.println("Value = " + val);
+        }
+        System.out.println();
+
+
+        // UnOrdered Map or HashMap
+        Map<String, Integer> mp = new HashMap<>();
+        mp.put("Archi", 100);
+        mp.put("Rivu", 52);
+        mp.put("Semicolonised", 82);
+        for (String key : mp.keySet()) {
+            System.out.println(key + " : " + mp.get(key));
+        }
+        System.out.println();
+
+
+        // Ordered Map or TreeMap
+        Map<String, Integer> mp1 = new TreeMap<>();
+        mp1.put("Rivu", 52);
+        mp1.put("Archi", 100);
+        mp1.put("Semicolonised", 82);
+        for (String key : mp1.keySet()) {
+            System.out.println(key + " : " + mp1.get(key));
+        }
+        System.out.println();
     }
 }
